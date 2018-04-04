@@ -14,7 +14,7 @@ namespace StoryWallpaper
 
         public static DesktopFileListView GetDesktopFileListView()
         {
-            return DesktopFileListView.FromListViewHandle(HandleFinder.ListViewHandle);
+            return DesktopFileListView.FromListViewHandle(HandleFinder.FolderListHandle);
         }
 
         public static Graphics GetWallpaperGraphics()
@@ -35,6 +35,8 @@ namespace StoryWallpaper
 
             originalHandleList[handle] = WindowNative.GetParent(handle);
 
+            appendedList.Add(handle);
+
             WindowNative.SetParent(handle, HandleFinder.WallpaperArea);
         }
 
@@ -51,6 +53,8 @@ namespace StoryWallpaper
             WindowNative.SetParent(handle, originalHandleList[handle]);
 
             originalHandleList.Remove(handle);
+
+            UpdateWallpaperArea();
         }
 
         public static void RemoveFromWallpaperArea(Form form)
@@ -62,6 +66,22 @@ namespace StoryWallpaper
         {
             foreach (IntPtr handle in appendedList)
                 RemoveFromWallpaperArea(handle);
+
+            UpdateWallpaperArea();
+        }
+
+        private const uint WM_ERASEBKGND = 0x14;
+        private const uint WM_PAINT = 0x0F;
+
+        public static void UpdateWallpaperArea()
+        {
+            if (HandleFinder.NeedSeparation)
+                return;
+
+            IntPtr wallpaperArea = HandleFinder.WallpaperArea;
+
+            WindowNative.SendMessage(wallpaperArea, WM_ERASEBKGND, (IntPtr) 0, wallpaperArea);
+            WindowNative.SendMessage(wallpaperArea, WM_PAINT, (IntPtr) 0, (IntPtr) 0);
         }
     }
 }

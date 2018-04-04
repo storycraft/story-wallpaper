@@ -1,0 +1,8 @@
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\bin\Release\story-wallpaper.dll
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\bin\Release\story-wallpaper.pdb
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\StoryWallpaper.Properties.Resources.resources
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\story-wallpaper.csproj.GenerateResource.cache
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\story-wallpaper.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\story-wallpaper.dll
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\story-wallpaper.pdb
+C:\Users\user\Desktop\Story Workspace\story-wallpaper\obj\Release\story-wallpaper.csprojResolveAssemblyReference.cache

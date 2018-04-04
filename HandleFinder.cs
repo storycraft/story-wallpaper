@@ -5,8 +5,6 @@ namespace StoryWallpaper
 {
     public static class HandleFinder
     {
-        private const int GW_HWNDNEXT = 2;
-
         public static IntPtr ProgmanHandle
         {
             get
@@ -23,7 +21,7 @@ namespace StoryWallpaper
             }
         }
 
-        public static IntPtr ListViewHandle
+        public static IntPtr FolderListWrapperHandle
         {
             get
             {
@@ -31,11 +29,19 @@ namespace StoryWallpaper
             }
         }
 
+        public static IntPtr FolderListHandle
+        {
+            get
+            {
+                return WindowNative.FindWindowEx(FolderListWrapperHandle, (IntPtr)0, "SysListView32", (string)null);
+            }
+        }
+
         public static IntPtr WallpaperArea
         {
             get
             {
-                return WindowNative.FindWindowEx(ListViewHandle, (IntPtr)0, "SysListView32", (string)null);
+                return TryFindWorker(DesktopAreaHandle);
             }
         }
 
@@ -83,9 +89,10 @@ namespace StoryWallpaper
                 return ProgmanHandle;
 
             IntPtr worker = TryFindWorker(IntPtr.Zero);
-            while (FindListViewWrapperHandle(worker) != IntPtr.Zero)
+            while (FindListViewWrapperHandle(worker) == IntPtr.Zero)
             {
                 IntPtr nextWorker = TryFindWorker(worker);
+
                 worker = nextWorker;
             }
 
