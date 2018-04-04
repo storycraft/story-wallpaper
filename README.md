@@ -1,2 +1,2 @@
 # story-wallpaper
-Windows Desktop Wallpaper customizing library written in C
+Windows desktop wallpaper customizing library written in C#
