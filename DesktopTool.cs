@@ -9,9 +9,6 @@ namespace StoryWallpaper
 {
     public static class DesktopTool
     {
-        private static Dictionary<IntPtr, IntPtr> originalHandleList = new Dictionary<IntPtr, IntPtr>();
-        private static List<IntPtr> appendedList = new List<IntPtr>();
-
         public static DesktopFileListView GetDesktopFileListView()
         {
             return DesktopFileListView.FromListViewHandle(HandleFinder.FolderListHandle);
@@ -30,13 +27,6 @@ namespace StoryWallpaper
             if (HandleFinder.NeedSeparation)
                 HandleFinder.SeparateWorker();
 
-            if (appendedList.Contains(handle))
-                return;
-
-            originalHandleList[handle] = WindowNative.GetParent(handle);
-
-            appendedList.Add(handle);
-
             WindowNative.SetParent(handle, HandleFinder.WallpaperArea);
         }
 
@@ -46,13 +36,7 @@ namespace StoryWallpaper
         }
 
         public static void RemoveFromWallpaperArea(IntPtr handle)
-        {
-            if (!appendedList.Contains(handle))
-                return;
-
-            WindowNative.SetParent(handle, originalHandleList[handle]);
-
-            originalHandleList.Remove(handle);
+        {            WindowNative.SetParent(handle, IntPtr.Zero);
 
             UpdateWallpaperArea();
         }
@@ -62,26 +46,16 @@ namespace StoryWallpaper
             RemoveFromWallpaperArea(form.Handle);
         }
 
-        public static void RemoveAllFromWallpaperArea()
-        {
-            foreach (IntPtr handle in appendedList)
-                RemoveFromWallpaperArea(handle);
-
-            UpdateWallpaperArea();
-        }
-
-        private const uint WM_ERASEBKGND = 0x14;
-        private const uint WM_PAINT = 0x0F;
+        private const int SPI_SETDESKWALLPAPER = 0x14;
+        private const int SPIF_UPDATEINIFILE = 0x01;
+        private const int SPIF_SENDWININICHANGE = 0x02;
 
         public static void UpdateWallpaperArea()
         {
-            if (HandleFinder.NeedSeparation)
-                return;
-
-            IntPtr wallpaperArea = HandleFinder.WallpaperArea;
-
-            WindowNative.SendMessage(wallpaperArea, WM_ERASEBKGND, (IntPtr) 0, wallpaperArea);
-            WindowNative.SendMessage(wallpaperArea, WM_PAINT, (IntPtr) 0, (IntPtr) 0);
+            WindowNative.SystemParametersInfo(SPI_SETDESKWALLPAPER,
+                0,
+                null,
+                SPIF_SENDWININICHANGE);
         }
     }
 }

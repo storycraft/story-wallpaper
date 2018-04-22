@@ -41,7 +41,16 @@ namespace StoryWallpaper
         {
             get
             {
-                return TryFindWorker(DesktopAreaHandle);
+                IntPtr progman = ProgmanHandle;
+                return DesktopAreaHandle == progman ? progman : TryFindWorker(DesktopAreaHandle);
+            }
+        }
+
+        public static IntPtr WallpaperAreaDC
+        {
+            get
+            {
+                return WindowNative.GetDC(WallpaperArea);
             }
         }
 
