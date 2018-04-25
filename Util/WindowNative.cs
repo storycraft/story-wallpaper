@@ -18,12 +18,6 @@ namespace StoryWallpaper.Util
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr GetParent(IntPtr hWndChild);
 
-        [DllImport("User32.dll")]
-        public static extern IntPtr DefWindowProc(IntPtr hWnd, uint uMsg, UIntPtr wParam, IntPtr lParam);
-
-        [DllImport("Kernel32.dll")]
-        public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, ref uint lpNumberOfBytesRead);
-
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
 
@@ -73,26 +67,25 @@ namespace StoryWallpaper.Util
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr SetWindowsHookEx(int idHook, WindowNative.HookProc lpfn, IntPtr hMod, uint dwThreadId);
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        public enum ShowWindowCommand : int
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
+            Hide = 0,
+            Normal = 1,
+            ShowMinimized = 2,
+            Maximize = 3,
+            ShowMaximized = 3,
+            ShowNoActivate = 4,
+            Show = 5,
+            Minimize = 6,
+            ShowMinNoActive = 7,
+            ShowNA = 8,
+            Restore = 9,
+            ShowDefault = 10,
+            ForceMinimize = 11
         }
 
-        [DllImport("user32.dll")]
-        public static extern bool RedrawWindow(IntPtr hWnd, [In] ref RECT lprcUpdate, IntPtr hrgnUpdate, uint flags);
-
-        [DllImport("user32.dll")]
-        public static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, uint flags);
-
-        [DllImport("user32.dll")]
-        public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
-
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll", EntryPoint = "ShowWindow", SetLastError = true)]
+        public static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommand nCmdShow);
 
         public enum WindowLongFlags : int
         {

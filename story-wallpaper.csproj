@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DesktopTool.cs" />
-    <Compile Include="HandleFinder.cs" />
+    <Compile Include="Util\HandleUtil.cs" />
     <Compile Include="Util\NativeViewConverter.cs" />
     <Compile Include="Util\LVBKIF.cs" />
     <Compile Include="Util\LVBKIMAGE.cs" />

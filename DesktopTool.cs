@@ -11,23 +11,23 @@ namespace StoryWallpaper
     {
         public static DesktopFileListView GetDesktopFileListView()
         {
-            return DesktopFileListView.FromListViewHandle(HandleFinder.FolderListHandle);
+            return DesktopFileListView.FromListViewHandle(HandleUtil.FolderListHandle);
         }
 
         public static Graphics GetWallpaperGraphics()
         {
-            if (HandleFinder.NeedSeparation)
-                HandleFinder.SeparateWorker();
+            if (HandleUtil.NeedSeparation)
+                HandleUtil.SpawnWorker();
 
-            return Graphics.FromHwnd(HandleFinder.WallpaperArea);
+            return Graphics.FromHwnd(HandleUtil.WallpaperArea);
         }
 
         public static void AppendToWallpaperArea(IntPtr handle)
         {
-            if (HandleFinder.NeedSeparation)
-                HandleFinder.SeparateWorker();
+            if (HandleUtil.NeedSeparation)
+                HandleUtil.SpawnWorker();
 
-            WindowNative.SetParent(handle, HandleFinder.WallpaperArea);
+            WindowNative.SetParent(handle, HandleUtil.WallpaperArea);
         }
 
         public static void AppendToWallpaperArea(Form form)
@@ -36,9 +36,10 @@ namespace StoryWallpaper
         }
 
         public static void RemoveFromWallpaperArea(IntPtr handle)
-        {            WindowNative.SetParent(handle, IntPtr.Zero);
+        {
+            WindowNative.SetParent(handle, IntPtr.Zero);
 
-            UpdateWallpaperArea();
+            UpdateWallpaper();
         }
 
         public static void RemoveFromWallpaperArea(Form form)
@@ -50,7 +51,7 @@ namespace StoryWallpaper
         private const int SPIF_UPDATEINIFILE = 0x01;
         private const int SPIF_SENDWININICHANGE = 0x02;
 
-        public static void UpdateWallpaperArea()
+        public static void UpdateWallpaper()
         {
             WindowNative.SystemParametersInfo(SPI_SETDESKWALLPAPER,
                 0,

@@ -1,9 +1,8 @@
-﻿using StoryWallpaper.Util;
-using System;
+﻿using System;
 
-namespace StoryWallpaper
+namespace StoryWallpaper.Util
 {
-    public static class HandleFinder
+    public static class HandleUtil
     {
         public static IntPtr ProgmanHandle
         {
@@ -25,7 +24,7 @@ namespace StoryWallpaper
         {
             get
             {
-                return WindowNative.FindWindowEx(DesktopAreaHandle, (IntPtr)0, "SHELLDLL_DefView", (string)null);
+                return WindowNative.FindWindowEx(DesktopAreaHandle, (IntPtr)0, "SHELLDLL_DefView", null);
             }
         }
 
@@ -33,7 +32,7 @@ namespace StoryWallpaper
         {
             get
             {
-                return WindowNative.FindWindowEx(FolderListWrapperHandle, (IntPtr)0, "SysListView32", (string)null);
+                return WindowNative.FindWindowEx(FolderListWrapperHandle, (IntPtr)0, "SysListView32", null);
             }
         }
 
@@ -41,8 +40,7 @@ namespace StoryWallpaper
         {
             get
             {
-                IntPtr progman = ProgmanHandle;
-                return DesktopAreaHandle == progman ? progman : TryFindWorker(DesktopAreaHandle);
+                return TryFindWorker(DesktopAreaHandle);
             }
         }
 
@@ -50,7 +48,7 @@ namespace StoryWallpaper
         {
             get
             {
-                return WindowNative.GetDC(WallpaperArea);
+                return WindowNative.GetDC(ProgmanHandle);
             }
         }
 
@@ -64,32 +62,26 @@ namespace StoryWallpaper
 
         const uint WM_SPAWN_WORKER = 0x052C;
 
-        public static void SeparateWorker()
+        public static void SpawnWorker()
         {
             IntPtr progman = ProgmanHandle;
 
-            //for users before windows 10 creator update
-
-            WindowNative.SendMessage(progman, WM_SPAWN_WORKER, (IntPtr) 0, (IntPtr) 0);
-
-            //for users after windows 10 creator update
-            WindowNative.SendMessage(progman, WM_SPAWN_WORKER, (IntPtr) 0x0000000D, (IntPtr) 0);
-            WindowNative.SendMessage(progman, WM_SPAWN_WORKER, (IntPtr) 0x0000000D, (IntPtr) 1);
+            WindowNative.SendMessage(progman, WM_SPAWN_WORKER, IntPtr.Zero, IntPtr.Zero);
         }
 
         private static IntPtr TryFindWorker(IntPtr handleAfter)
         {
-            return WindowNative.FindWindowEx((IntPtr) null, handleAfter, "WorkerW", null);
+            return WindowNative.FindWindowEx(IntPtr.Zero, handleAfter, "WorkerW", null);
         }
 
         private static IntPtr FindListViewWrapperHandle(IntPtr desktopAreaHandle)
         {
-            return WindowNative.FindWindowEx(desktopAreaHandle, (IntPtr)0, "SHELLDLL_DefView", null);
+            return WindowNative.FindWindowEx(desktopAreaHandle, IntPtr.Zero, "SHELLDLL_DefView", null);
         }
 
         private static IntPtr FindListViewHandle(IntPtr listViewHandle)
         {
-            return WindowNative.FindWindowEx(listViewHandle, (IntPtr)0, "SysListView32", null);
+            return WindowNative.FindWindowEx(listViewHandle, IntPtr.Zero, "SysListView32", null);
         }
 
         private static IntPtr FindDesktopArea()
