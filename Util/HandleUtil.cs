@@ -66,7 +66,8 @@ namespace StoryWallpaper.Util
         {
             IntPtr progman = ProgmanHandle;
 
-            WindowNative.SendMessage(progman, WM_SPAWN_WORKER, IntPtr.Zero, IntPtr.Zero);
+            IntPtr result = IntPtr.Zero;
+            WindowNative.SendMessageTimeout(progman, WM_SPAWN_WORKER, IntPtr.Zero, IntPtr.Zero, WindowNative.SendMessageTimeoutFlags.SMTO_NORMAL, 1000, out result);
         }
 
         private static IntPtr TryFindWorker(IntPtr handleAfter)
@@ -86,18 +87,17 @@ namespace StoryWallpaper.Util
 
         private static IntPtr FindDesktopArea()
         {
-            if (FindListViewWrapperHandle(ProgmanHandle) != IntPtr.Zero)
-                return ProgmanHandle;
+            IntPtr desktopAreaHandle = IntPtr.Zero;
 
-            IntPtr worker = TryFindWorker(IntPtr.Zero);
-            while (FindListViewWrapperHandle(worker) == IntPtr.Zero)
+            WindowNative.EnumWindows((IntPtr hWnd, IntPtr lParam) =>
             {
-                IntPtr nextWorker = TryFindWorker(worker);
+                if (FindListViewWrapperHandle(hWnd) != IntPtr.Zero)
+                    desktopAreaHandle = hWnd;
 
-                worker = nextWorker;
-            }
+                return true;
+            }, IntPtr.Zero);
 
-            return worker;
+            return desktopAreaHandle;
         }
     }
 }

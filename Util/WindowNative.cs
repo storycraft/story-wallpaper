@@ -27,6 +27,46 @@ namespace StoryWallpaper.Util
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, uint lParam);
 
+        [Flags]
+        public enum SendMessageTimeoutFlags : uint
+        {
+            SMTO_NORMAL = 0x0,
+            SMTO_BLOCK = 0x1,
+            SMTO_ABORTIFHUNG = 0x2,
+            SMTO_NOTIMEOUTIFNOTHUNG = 0x8,
+            SMTO_ERRORONEXIT = 0x20
+        }
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(
+            IntPtr hWnd,
+            uint Msg,
+            UIntPtr wParam,
+            IntPtr lParam,
+            SendMessageTimeoutFlags fuFlags,
+            uint uTimeout,
+            out UIntPtr lpdwResult);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(
+            IntPtr windowHandle,
+            uint Msg,
+            IntPtr wParam,
+            IntPtr lParam,
+            SendMessageTimeoutFlags flags,
+            uint timeout,
+            out IntPtr result);
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageTimeout", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint SendMessageTimeoutText(
+            IntPtr hWnd,
+            int Msg,
+            int countOfChars,
+            StringBuilder text,
+            SendMessageTimeoutFlags flags,
+            uint uTImeoutj,
+            out IntPtr result);
+
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
@@ -163,5 +203,11 @@ namespace StoryWallpaper.Util
         }
 
         public delegate bool HandlerRoutine(WindowNative.CtrlTypes CtrlType);
+
+        public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
     }
 }
