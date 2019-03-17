@@ -1,14 +1,14 @@
-﻿namespace StoryWallpaper.Util
+namespace StoryWallpaper.Util
 {
     internal enum LVBKIF : ulong
     {
-        SOURCE_NONE = 0,
-        STYLE_NORMAL = 0,
-        SOURCE_HBITMAP = 1,
-        SOURCE_URL = 2,
-        SOURCE_MASK = 3,
-        STYLE_MASK = 16, // 0x0000000000000010
-        STYLE_TILE = 16, // 0x0000000000000010
-        FLAG_TILEOFFSET = 256, // 0x0000000000000100
+        SOURCE_NONE = 0x00000000,
+        SOURCE_HBITMAP = 0x00000001,
+        SOURCE_URL = 0x00000002,
+        SOURCE_MASK = 0x00000003,
+        STYLE_MASK = 0x00000010, // 0x0000000000000010
+        STYLE_TILE = 0x00000010, // 0x0000000000000010
+        STYLE_NORMAL = 0x00000000,
+        FLAG_TILEOFFSET = 0x00000100, // 0x0000000000000100
     }
 }
